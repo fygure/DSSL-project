@@ -1,19 +1,28 @@
 # K-Means Clustering :)
 
+#install.packages("tidyverse")
+#library(tidyverse)
+#install.packages("caret")
+#library(caret)
+#install.packages("FactoMineR")
+#library(FactoMineR)
+#install.packages("factoextra")
+#library(factoextra)
+#install.packages("purrr")
+#library(purrr)
+#install.packages("cluster")
+#library(cluster)
+
+
 df <- d
 df <- df[3:33]
 
-# trying a new way
-#install.packages("caret")
-#library(caret)
 #preprocessing the data
 df_pre <- preProcess(df[,c(1:13, 24, 26)], method = c("center", "scale"))
 
 #normalizing 
 customers_copy <- predict(df_pre, df[, c(1:13, 24, 26)])
 summary(customers_copy)
-
-library(FactoMineR)
 
 #Running a PCA.
 customers_copy_pca <- PCA(customers_copy, graph = FALSE)
@@ -36,8 +45,6 @@ dimdesc(customers_copy_pca, axes = 1:2)
 #Tracing variable contributions in customers_pca
 customers_copy_pca$var$contrib
 
-library(factoextra)
-
 #Creating a factor map for the variable contributions
 fviz_pca_var(customers_copy_pca, col.var = "contrib", gradient.cols = c("#002bbb", "#bb2e00"), repel = TRUE)
 
@@ -52,7 +59,6 @@ fviz_pca_biplot(customers_copy_pca)
 
 #K-means clustering
 #Elbow Method
-library(purrr)
 tot_withinss <- map_dbl(1:10, function(k){
   model <- kmeans(x = customers_copy, centers = k)
   model$tot.withinss
@@ -68,7 +74,6 @@ ggplot(elbow_df, aes(k, tot_withinss)) + geom_line() + scale_x_continuous(breaks
 #K = 2 or 3 are good ideas
 
 #Silhouette Method
-library(cluster)
 sil_width <- map_dbl(2:10, function(k){
   model <- pam(customers_copy, k = k)
   model$silinfo$avg.width
