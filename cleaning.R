@@ -15,10 +15,10 @@ for (i in 1:nrow(d)) {
   # Check if the marital status is 'In relationship'
   if (d$Relationship[i] == 1) {
     # Calculate family size if in a relationship
-    d$Family_size[i] <- 2 + d$Kids[i]
+    d$Family_Size[i] <- 2 + d$Kids[i]
   } else {
     # Calculate family size if not in a relationship
-    d$Family_size[i] <- 1 + d$Kids[i]
+    d$Family_Size[i] <- 1 + d$Kids[i]
   }
 }
 
@@ -46,5 +46,13 @@ d$Income <- ifelse(d$Income > 120000, 120000, d$Income)
 d$AverageCheck <- ifelse(d$AverageCheck > 200, 200, d$AverageCheck)
 
 d$ActiveDays <- d$Days_is_client - d$Recency
+
+d$ShareDealsPurchases <- ifelse(is.infinite(d$ShareDealsPurchases), NA, d$ShareDealsPurchases)
+median_value <- median(d$ShareDealsPurchases, na.rm = TRUE)
+d$ShareDealsPurchases <- ifelse(is.na(d$ShareDealsPurchases), median_value, d$ShareDealsPurchases)
+sum(is.na(d$ShareDealsPurchases))
+d$`...30` <- NULL
+
+d <- d[-nrow(d), ]
 
 #write.csv(d, "C:\\Users\\seane\\Downloads\\dssl_project.csv")
